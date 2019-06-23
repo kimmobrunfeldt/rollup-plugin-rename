@@ -1,21 +1,21 @@
 {
-  "name": "@betit/rollup-plugin-rename-extensions",
-  "version": "0.0.4",
-  "description": "Plugin to rename file extensions before they're emitted in rollup",
+  "name": "rollup-plugin-rename",
+  "version": "0.0.1",
+  "description": "Plugin to rename file name before they're emitted in rollup",
   "main": "dist/index.js",
-  "homepage": "https://github.com/GiG/rollup-plugin-rename-extensions",
+  "homepage": "https://github.com/yesmeck/rollup-plugin-rename",
   "bugs": {
-    "url": "https://github.com/GiG/rollup-plugin-rename-extensions/issues"
+    "url": "https://github.com/yesmeck/rollup-plugin-rename/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/GiG/rollup-plugin-rename-extensions.git"
+    "url": "https://github.com/yesmeck/rollup-plugin-rename.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "author": "Thomas Caserta <thomas.caserta@gig.com>",
+  "author": "Thomas Caserta <thomas.caserta@gig.com>, Weizhu <yesmeck@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "acorn-walk": "^6.1.1",
