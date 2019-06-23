@@ -1,17 +1,15 @@
-# Rename Extensions Plugin
+# Rename Plugin
 
-Rollup plugin to take modules from RollUp and rename their file extensions. Useful for when using `preserveModules`. The plugin will also parse
+Rollup plugin to take modules from RollUp and rename their file name. Useful for when using `preserveModules`. The plugin will also parse
 all modules code and rewrite imports/exports to match the new file name.
 
 ## Installation
 
 ```bash
-npm i --save-dev @betit/rollup-plugin-rename-extensions
+npm i --save-dev rollup-plugin-rename
 ```
 
 ## Usage
-
-As an example, heres how we can convert `.ts` `.vue` to `.js` and `.vue.js` respectively.
 
 ```js
 import renameExtensions from '@betit/rollup-plugin-rename-extensions';
@@ -25,10 +23,7 @@ export default {
         // ...
         renameExtensions({
             include: ['**/*.ts', '**/*.vue'],
-            mappings: {
-                '.vue': '.vue.js',
-                '.ts': '.js',
-            },
+            map: (name) => name.replace('src/', ''),
         })
     ],
 },
@@ -57,9 +52,9 @@ export interface IRenameExtensionsOptions {
 
     /**
      * Object describing the transformations to use.
-     * IE. Input Extension => Output Extensions.
+     * IE. Input name => Output name.
      * Extensions should include the dot for both input and output.
      */
-    mappings: Record<string, string>;
+    map: (name: string) => string;
 }
 ```
