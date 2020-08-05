@@ -12,7 +12,7 @@ npm i --save-dev rollup-plugin-rename
 ## Usage
 
 ```js
-import renameExtensions from '@betit/rollup-plugin-rename-extensions';
+import rename from '@betit/rollup-plugin-rename';
 
 // Rollup Configuration
 export default {
@@ -21,9 +21,9 @@ export default {
     /* ... */
     plugins: [
         // ...
-        renameExtensions({
+        rename({
             include: ['**/*.ts', '**/*.vue'],
-            map: (name) => name.replace('src/', ''),
+            map: (name) => name.replace('src/', 'source/'),
         })
     ],
 },
