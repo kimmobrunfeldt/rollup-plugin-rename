@@ -1,9 +1,8 @@
 import { Plugin } from 'rollup';
-import { createFilter } from 'rollup-pluginutils';
+import { createFilter } from '@rollup/pluginutils';
 // @ts-ignore No typings.
 import { simple } from 'acorn-walk';
 import MagicString from 'magic-string';
-import { extname } from 'path';
 
 interface INode {
   start: number;
@@ -89,7 +88,7 @@ export function rewrite(input: string, map: (name: string) => string): string {
   return map(input);
 }
 
-export default function renameExtensions(options: IRenameExtensionsOptions): Plugin {
+export default function rename(options: IRenameExtensionsOptions): Plugin {
   const filter = createFilter(options.include, options.exclude);
   const sourceMaps = options.sourceMap !== false;
   return {
