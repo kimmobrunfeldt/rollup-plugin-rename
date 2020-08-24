@@ -1,19 +1,12 @@
 import { Plugin } from 'rollup';
 import { createFilter } from '@rollup/pluginutils';
-// @ts-ignore No typings.
-import { simple } from 'acorn-walk';
+import { Node } from 'estree';
+import { walk } from 'estree-walker';
 import MagicString from 'magic-string';
-
-interface INode {
-  start: number;
-  end: number;
-  type: NodeType;
-  [additional: string]: any;
-}
 
 enum NodeType {
   Literal = 'Literal',
-  CallExpresssion = 'CallExpression',
+  CallExpression = 'CallExpression',
   Identifier = 'Identifier',
   ImportDeclaration = 'ImportDeclaration',
   ExportNamedDeclaration = 'ExportNamedDeclaration',
@@ -48,8 +41,8 @@ export function isEmpty(array: any[] | undefined) {
   return !array || array.length === 0;
 }
 
-export function getRequireSource(node: INode): INode | false {
-  if (node.type !== NodeType.CallExpresssion) {
+export function getRequireSource(node: any): Node | false {
+  if (node.type !== NodeType.CallExpression) {
     return false;
   }
 
@@ -66,7 +59,7 @@ export function getRequireSource(node: INode): INode | false {
   return args[0];
 }
 
-export function getImportSource(node: INode): INode | false {
+export function getImportSource(node: any): Node | false {
   if (node.type !== NodeType.ImportDeclaration || node.source.type !== NodeType.Literal) {
     return false;
   }
@@ -74,7 +67,7 @@ export function getImportSource(node: INode): INode | false {
   return node.source;
 }
 
-export function getExportSource(node: INode): INode | false {
+export function getExportSource(node: any): Node | false {
   const exportNodes = [NodeType.ExportAllDeclaration, NodeType.ExportNamedDeclaration];
 
   if (!exportNodes.includes(node.type) || !node.source || node.source.type !== NodeType.Literal) {
@@ -118,21 +111,25 @@ export default function rename(options: IRenameExtensionsOptions): Plugin {
             sourceType: 'module',
           });
 
-          const extract = (node: INode) => {
-            const req = getRequireSource(node) || getImportSource(node) || getExportSource(node);
+          walk(ast, {
+            enter(node) {
+              if (
+                [
+                  NodeType.ImportDeclaration,
+                  NodeType.CallExpression,
+                  NodeType.ExportAllDeclaration,
+                  NodeType.ExportNamedDeclaration,
+                ].includes(node.type as NodeType)
+              ) {
+                const req: any = getRequireSource(node) || getImportSource(node) || getExportSource(node);
 
-            if (req) {
-              const { start, end } = req;
-              const newPath = rewrite(req.value, options.map);
-              magicString.overwrite(start, end, `'${newPath}'`);
-            }
-          };
-
-          simple(ast, {
-            ImportDeclaration: extract,
-            CallExpression: extract,
-            ExportAllDeclaration: extract,
-            ExportNamedDeclaration: extract,
+                if (req) {
+                  const { start, end } = req;
+                  const newPath = rewrite(req.value, options.map);
+                  magicString.overwrite(start, end, `'${newPath}'`);
+                }
+              }
+            },
           });
 
           if (sourceMaps) {
