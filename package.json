@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-rename",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin to rename file name before they're emitted in rollup",
   "main": "dist/index.js",
   "homepage": "https://github.com/yesmeck/rollup-plugin-rename",
